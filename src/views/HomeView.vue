@@ -17,17 +17,13 @@ const playAudio = () => {
   isPlaying.value = true;
   audioRef.value.src = require(`@/assets/${data.value[currentAudioIndex.value].audio}`);
   audioRef.value.currentTime = currentTime.value;
-
-  // Используйте `play` и обработайте Promise
   const playPromise = audioRef.value.play();
 
   if (playPromise !== undefined) {
     playPromise.then(_ => {
-      // Воспроизведение началось успешно
       currentTimeSum.value = currentAudioIndex.value > 0 ? data.value[currentAudioIndex.value].from : 0;
       currentTimeTotal.value = currentTime.value + currentTimeSum.value;
     }).catch(error => {
-      // Воспроизведение было предотвращено, обработайте это событие
       isPlaying.value = false;
       console.error('Auto-play was prevented:', error);
     });
@@ -44,6 +40,8 @@ const stopAudio = () => {
   audioRef.value.currentTime = 0;
   currentTimeSum.value =   0;
   currentTimeTotal.value = 0;
+  audioRef.value.src = require(`@/assets/${data.value[currentAudioIndex.value].audio}`);
+  audioRef.value.currentTime = currentTime.value;
 };
 const seekAudio = () => {
   if (isPlaying.value) {
@@ -70,6 +68,8 @@ const updateCurrentTime = () => {
     } else {
       currentAudioIndex.value++;
       currentTime.value = 0;
+      currentTimeSum.value =  data.value[currentAudioIndex.value].from;
+      currentTimeTotal.value = currentTimeSum.value;
       playAudio();
     }
   }
