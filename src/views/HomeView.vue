@@ -30,6 +30,8 @@ const stopAudio = () => {
   audioRef.value.pause();
   currentTime.value = 0;
   audioRef.value.currentTime = 0;
+  currentTimeSum.value =   0;
+  currentTimeTotal.value = 0;
 };
 const seekAudio = () => {
   if (isPlaying.value) {
@@ -49,7 +51,6 @@ const clickRange = () =>{
 }
 const updateCurrentTime = () => {
   currentTime.value = Math.floor(audioRef.value.currentTime);
-  let counter =  data.value[currentAudioIndex.value].duration
   if (currentTime.value >= data.value[currentAudioIndex.value].duration) {
     if(currentAudioIndex.value == data.value.length-1){
       pauseAudio();
