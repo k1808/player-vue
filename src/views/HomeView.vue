@@ -18,6 +18,8 @@ const playAudio = () => {
   audioRef.value.src = require(`@/assets/${data.value[currentAudioIndex.value].audio}`);
   audioRef.value.currentTime = currentTime.value;
   audioRef.value.play();
+  currentTimeSum.value =  currentAudioIndex.value>0 ? data.value[currentAudioIndex.value].from: 0;
+  currentTimeTotal.value = currentTime.value + currentTimeSum.value;
 };
 const pauseAudio = () => {
   isPlaying.value = false;
@@ -47,16 +49,13 @@ const clickRange = () =>{
 }
 const updateCurrentTime = () => {
   currentTime.value = Math.floor(audioRef.value.currentTime);
-
+  let counter =  data.value[currentAudioIndex.value].duration
   if (currentTime.value >= data.value[currentAudioIndex.value].duration) {
     if(currentAudioIndex.value == data.value.length-1){
       pauseAudio();
     } else {
       currentAudioIndex.value++;
       currentTime.value = 0;
-      if (currentAudioIndex.value >= data.value.length) {
-        currentAudioIndex.value = 0;
-      }
       playAudio();
     }
   }
@@ -65,16 +64,6 @@ const updateCurrentTime = () => {
 onMounted(() => {
   audioRef.value.addEventListener('timeupdate', updateCurrentTime);
 });
-
-watch(
-    () => currentAudioIndex.value,
-    (val) => {
-        for (let i = 0; i < val; i++) {
-          currentTimeSum.value += data.value[i].duration;
-        }
-      currentTimeTotal.value = currentTimeSum.value;
-    }
-)
 
 watch(
     () => currentTime.value,
